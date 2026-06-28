@@ -1,0 +1,113 @@
+import { Lead } from '../models/Lead';
+import { NetworkContact } from '../models/NetworkContact';
+import { PhoneCallResult, PhoneHistory } from '../models/PhoneHistory';
+
+export class PhoneService {
+  static createHistoryEntry({
+    contactId,
+    area,
+    result,
+    note,
+    nextCall,
+    duration,
+    userId,
+  }: {
+    contactId: string;
+    area: 'lead' | 'network';
+    result: PhoneCallResult;
+    note?: string;
+    nextCall?: string;
+    duration?: number;
+    userId?: string;
+  }): PhoneHistory {
+    return {
+      id: crypto.randomUUID(),
+      contactId,
+      area,
+      date: new Date().toISOString(),
+      duration,
+      result,
+      note,
+      nextCall,
+      userId,
+      createdAt: new Date().toISOString(),
+    };
+  }
+
+  static addLeadCall(
+    lead: Lead,
+    result: PhoneCallResult,
+    note?: string,
+    nextCall?: string,
+    duration?: number,
+    userId?: string
+  ): Lead {
+    const historyEntry = this.createHistoryEntry({
+      contactId: lead.id,
+      area: 'lead',
+      result,
+      note,
+      nextCall,
+      duration,
+      userId,
+    });
+
+    return {
+      ...lead,
+      callAttempts: lead.callAttempts + 1,
+      lastCall: historyEntry.date,
+      nextCall,
+      history: [...lead.history, historyEntry],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static addNetworkCall(
+    contact: NetworkContact,
+    result: PhoneCallResult,
+    note?: string,
+    nextCall?: string,
+    duration?: number,
+    userId?: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      lastContact: new Date().toISOString(),
+      nextContact: nextCall,
+      history: [
+        ...contact.history,
+        {
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+          action: result,
+          note,
+          userId,
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static getCallUrl(phone?: string): string {
+    if (!phone) return '#';
+
+    const cleanedPhone = phone
+      .replace(/\s+/g, '')
+      .replace(/[()/-]/g, '');
+
+    return `tel:${cleanedPhone}`;
+  }
+
+  static shouldSendMailAfterAttempts(attempts: number): boolean {
+    return attempts === 3 || attempts === 4;
+  }
+
+  static getNextAttemptLabel(attempts: number): string {
+    if (attempts <= 0) return 'Erster Anruf';
+    if (attempts === 1) return 'Zweiter Versuch';
+    if (attempts === 2) return 'Dritter Versuch';
+    if (attempts === 3) return 'Mail 1 vorbereiten';
+    if (attempts === 4) return 'Mail 2 vorbereiten';
+    return 'Archiv prüfen';
+  }
+}
