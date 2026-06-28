@@ -1,0 +1,111 @@
+import { Lead } from '../models/Lead';
+import { NetworkContact } from '../models/NetworkContact';
+import { ImportProfile } from '../models/ImportProfile';
+import { ImportJob } from '../models/ImportJob';
+
+export class ImportService {
+  static createJob(
+    profile: ImportProfile,
+    fileName?: string
+  ): ImportJob {
+    const now = new Date().toISOString();
+
+    return {
+      id: crypto.randomUUID(),
+      profileId: profile.id,
+      source: profile.source,
+      targetArea: profile.targetArea,
+      fileName,
+      status: 'pending',
+      totalRows: 0,
+      importedRows: 0,
+      skippedRows: 0,
+      updatedRows: 0,
+      errorRows: 0,
+      errors: [],
+      createdAt: now,
+      updatedAt: now,
+    };
+  }
+
+  static startJob(job: ImportJob): ImportJob {
+    return {
+      ...job,
+      status: 'running',
+      startedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static finishJob(job: ImportJob): ImportJob {
+    return {
+      ...job,
+      status: 'completed',
+      completedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static failJob(
+    job: ImportJob,
+    message: string
+  ): ImportJob {
+    return {
+      ...job,
+      status: 'failed',
+      completedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      errors: [
+        ...job.errors,
+        {
+          message,
+        },
+      ],
+    };
+  }
+
+  static mapLead(
+    row: Record<string, any>
+  ): Partial<Lead> {
+    return {
+      company: row.company ?? row.Firma ?? '',
+      contact: row.contact ?? row.Ansprechpartner ?? '',
+      phone: row.phone ?? row.Telefon ?? '',
+      email: row.email ?? row.Email ?? '',
+      city: row.city ?? row.Ort ?? '',
+      street: row.street ?? row.Straße ?? '',
+      zip: row.zip ?? row.PLZ ?? '',
+    };
+  }
+
+  static mapNetwork(
+    row: Record<string, any>
+  ): Partial<NetworkContact> {
+    return {
+      company: row.company ?? row.Firma ?? '',
+      contact: row.contact ?? row.Ansprechpartner ?? '',
+      phone: row.phone ?? row.Telefon ?? '',
+      email: row.email ?? row.Email ?? '',
+      city: row.city ?? row.Ort ?? '',
+    };
+  }
+
+  static validateRequiredFields(
+    row: Partial<Lead | NetworkContact>
+  ): boolean {
+    return !!row.company && !!row.contact;
+  }
+
+  static calculateProgress(job: ImportJob): number {
+    if (job.totalRows === 0) return 0;
+
+    return Math.round(
+      ((job.importedRows +
+        job.updatedRows +
+        job.skippedRows +
+        job.errorRows) /
+        job.totalRows) *
+        100
+    );
+  }
+}
