@@ -3,11 +3,11 @@ import {
   Download,
   Home,
   Import,
+  Network,
   Phone,
   Settings,
-  Users,
-  Network,
   UserCog,
+  Users,
 } from 'lucide-react';
 
 export type Page =
@@ -24,7 +24,7 @@ export type Page =
 const items = [
   ['dashboard', Home, 'Dashboard'],
   ['session', Phone, 'Telefon-Session'],
-  ['kunden', Users, 'Kunden-Leads'],
+  ['kunden', Users, 'Leads'],
   ['netzwerk', Network, 'Netzwerk'],
   ['import', Import, 'Import'],
   ['export', Download, 'Export'],
@@ -55,7 +55,7 @@ export function Sidebar({
           <h1>
             AKQUISE <span>WOLF</span>
           </h1>
-          <p>Jeder Anruf zählt</p>
+          <p>Lead Engine · Network Engine</p>
         </div>
       </div>
 
@@ -76,11 +76,11 @@ export function Sidebar({
       </nav>
 
       <div className="sidebarFooter">
-        <strong>Wolf Team</strong>
+        <strong>Heute fokussiert</strong>
         <p className="muted">
-          Heute fokussiert arbeiten: Kontakte jagen, Status setzen, weiter.
+          Leads gewinnen. Netzwerk pflegen. Jeden Kontakt sauber nachfassen.
         </p>
-        <p className="wolfQuote">„Beute machen. Nicht ausreden.“</p>
+        <p className="wolfQuote">„Jeder Anruf zählt.“</p>
       </div>
     </aside>
   );
