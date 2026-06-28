@@ -1,0 +1,64 @@
+import { Lead, LeadStatus } from '../models/Lead';
+
+export class LeadService {
+  static updateStatus(
+    lead: Lead,
+    status: LeadStatus
+  ): Lead {
+    return {
+      ...lead,
+      status,
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static qualify(
+    lead: Lead
+  ): Lead {
+    return {
+      ...lead,
+      qualified: true,
+      status: 'qualifiziert',
+      qualifiedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static export(
+    lead: Lead,
+    target: string
+  ): Lead {
+    return {
+      ...lead,
+      exported: true,
+      exportTarget: target,
+      exportedAt: new Date().toISOString(),
+      status: 'exportiert',
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static addTag(
+    lead: Lead,
+    tag: string
+  ): Lead {
+    if (lead.tags.includes(tag)) return lead;
+
+    return {
+      ...lead,
+      tags: [...lead.tags, tag],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static removeTag(
+    lead: Lead,
+    tag: string
+  ): Lead {
+    return {
+      ...lead,
+      tags: lead.tags.filter(t => t !== tag),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+}
