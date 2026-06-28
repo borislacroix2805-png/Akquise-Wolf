@@ -1,0 +1,53 @@
+export type ReminderStatus =
+  | 'offen'
+  | 'erledigt'
+  | 'verschoben'
+  | 'abgebrochen';
+
+export type ReminderPriority =
+  | 'niedrig'
+  | 'normal'
+  | 'hoch'
+  | 'kritisch';
+
+export interface Reminder {
+  id: string;
+
+  contactId: string;
+
+  area: 'lead' | 'network';
+
+  title: string;
+
+  description?: string;
+
+  dueDate: string;
+
+  priority: ReminderPriority;
+
+  status: ReminderStatus;
+
+  assignedTo?: string;
+
+  createdBy?: string;
+
+  completedAt?: string;
+
+  createdAt: string;
+
+  updatedAt: string;
+}
+
+export const reminderStatusLabels: Record<ReminderStatus, string> = {
+  offen: 'Offen',
+  erledigt: 'Erledigt',
+  verschoben: 'Verschoben',
+  abgebrochen: 'Abgebrochen',
+};
+
+export const reminderPriorityLabels: Record<ReminderPriority, string> = {
+  niedrig: 'Niedrig',
+  normal: 'Normal',
+  hoch: 'Hoch',
+  kritisch: 'Kritisch',
+};
