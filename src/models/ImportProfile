@@ -1,0 +1,58 @@
+export type ImportSource =
+  | 'excel'
+  | 'csv'
+  | 'hubspot'
+  | 'salesforce'
+  | 'pipedrive'
+  | 'zoho'
+  | 'dynamics'
+  | 'api'
+  | 'webhook';
+
+export type ImportTargetArea = 'lead' | 'network';
+
+export type ImportProfileStatus = 'active' | 'inactive' | 'draft';
+
+export interface ImportFieldMapping {
+  sourceField: string;
+  targetField: string;
+  required?: boolean;
+}
+
+export interface ImportProfile {
+  id: string;
+
+  name: string;
+
+  source: ImportSource;
+
+  targetArea: ImportTargetArea;
+
+  status: ImportProfileStatus;
+
+  fieldMappings: ImportFieldMapping[];
+
+  duplicateStrategy: 'skip' | 'update' | 'create_new';
+
+  lastImportAt?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const importSourceLabels: Record<ImportSource, string> = {
+  excel: 'Excel',
+  csv: 'CSV',
+  hubspot: 'HubSpot',
+  salesforce: 'Salesforce',
+  pipedrive: 'Pipedrive',
+  zoho: 'Zoho',
+  dynamics: 'Microsoft Dynamics',
+  api: 'API',
+  webhook: 'Webhook',
+};
+
+export const importTargetAreaLabels: Record<ImportTargetArea, string> = {
+  lead: 'Leads',
+  network: 'Netzwerk',
+};
