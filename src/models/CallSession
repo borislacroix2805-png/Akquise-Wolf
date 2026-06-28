@@ -1,0 +1,56 @@
+export type CallSessionStatus = 'active' | 'paused' | 'completed' | 'cancelled';
+
+export interface CallSessionItem {
+  id: string;
+
+  contactId: string;
+  area: 'lead' | 'network';
+
+  startedAt?: string;
+  endedAt?: string;
+
+  result?:
+    | 'erreicht'
+    | 'nicht_erreicht'
+    | 'besetzt'
+    | 'mailbox'
+    | 'rueckruf'
+    | 'qualifiziert'
+    | 'kein_interesse';
+
+  note?: string;
+  nextCall?: string;
+}
+
+export interface CallSession {
+  id: string;
+
+  name: string;
+
+  userId: string;
+
+  status: CallSessionStatus;
+
+  area: 'lead' | 'network' | 'mixed';
+
+  startedAt: string;
+  endedAt?: string;
+
+  totalContacts: number;
+  completedCalls: number;
+  reached: number;
+  qualified: number;
+  notReached: number;
+
+  items: CallSessionItem[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const callSessionStatusLabels: Record<CallSessionStatus, string> = {
+  active: 'Aktiv',
+  paused: 'Pausiert',
+  completed: 'Abgeschlossen',
+  cancelled: 'Abgebrochen',
+};
