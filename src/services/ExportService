@@ -1,0 +1,144 @@
+import { Lead } from '../models/Lead';
+import { NetworkContact } from '../models/NetworkContact';
+import { ExportProfile } from '../models/ExportProfile';
+import { ExportJob } from '../models/ExportJob';
+
+export class ExportService {
+  static createJob(
+    profile: ExportProfile,
+    totalRecords: number,
+    fileName?: string
+  ): ExportJob {
+    const now = new Date().toISOString();
+
+    return {
+      id: crypto.randomUUID(),
+      profileId: profile.id,
+      target: profile.target,
+      area: profile.area,
+      status: 'pending',
+      totalRecords,
+      exportedRecords: 0,
+      skippedRecords: 0,
+      errorRecords: 0,
+      errors: [],
+      fileName,
+      createdAt: now,
+      updatedAt: now,
+    };
+  }
+
+  static startJob(job: ExportJob): ExportJob {
+    return {
+      ...job,
+      status: 'running',
+      startedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static finishJob(job: ExportJob): ExportJob {
+    return {
+      ...job,
+      status: 'completed',
+      completedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static failJob(job: ExportJob, message: string): ExportJob {
+    return {
+      ...job,
+      status: 'failed',
+      completedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      errors: [
+        ...job.errors,
+        {
+          message,
+        },
+      ],
+    };
+  }
+
+  static filterQualifiedLeads(leads: Lead[]): Lead[] {
+    return leads.filter((lead) => lead.qualified && !lead.exported);
+  }
+
+  static filterNetworkContacts(contacts: NetworkContact[]): NetworkContact[] {
+    return contacts.filter((contact) => contact.status !== 'archiv');
+  }
+
+  static mapLeadForExport(lead: Lead): Record<string, string | number | boolean | undefined> {
+    return {
+      id: lead.id,
+      firma: lead.company,
+      ansprechpartner: lead.contact,
+      telefon: lead.phone,
+      mobil: lead.mobile,
+      email: lead.email,
+      webseite: lead.website,
+      strasse: lead.street,
+      plz: lead.zip,
+      ort: lead.city,
+      land: lead.country,
+      kategorie: lead.category,
+      branche: lead.industry,
+      status: lead.status,
+      prioritaet: lead.priority,
+      bearbeiter: lead.owner,
+      quelle: lead.source,
+      quelle_name: lead.sourceName,
+      anrufversuche: lead.callAttempts,
+      letzter_anruf: lead.lastCall,
+      naechster_anruf: lead.nextCall,
+      naechste_aktion: lead.nextAction,
+      qualifiziert: lead.qualified,
+      qualifiziert_am: lead.qualifiedAt,
+      exportiert: lead.exported,
+      exportiert_am: lead.exportedAt,
+      export_ziel: lead.exportTarget,
+      tags: lead.tags.join(', '),
+      erstellt_am: lead.createdAt,
+      aktualisiert_am: lead.updatedAt,
+    };
+  }
+
+  static mapNetworkForExport(
+    contact: NetworkContact
+  ): Record<string, string | undefined> {
+    return {
+      id: contact.id,
+      firma: contact.company,
+      ansprechpartner: contact.contact,
+      kategorie: contact.category,
+      status: contact.status,
+      telefon: contact.phone,
+      mobil: contact.mobile,
+      email: contact.email,
+      webseite: contact.website,
+      strasse: contact.street,
+      plz: contact.zip,
+      ort: contact.city,
+      land: contact.country,
+      quelle: contact.recommendationSource,
+      bearbeiter: contact.owner,
+      naechste_aktion: contact.nextAction,
+      naechster_kontakt: contact.nextContact,
+      letzter_kontakt: contact.lastContact,
+      tags: contact.tags.join(', '),
+      erstellt_am: contact.createdAt,
+      aktualisiert_am: contact.updatedAt,
+    };
+  }
+
+  static calculateProgress(job: ExportJob): number {
+    if (job.totalRecords === 0) return 0;
+
+    return Math.round(
+      ((job.exportedRecords + job.skippedRecords + job.errorRecords) /
+        job.totalRecords) *
+        100
+    );
+  }
+}
