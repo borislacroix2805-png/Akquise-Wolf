@@ -1,0 +1,125 @@
+import { Lead } from '../models/Lead';
+import { NetworkContact } from '../models/NetworkContact';
+import {
+  DailyStatistics,
+  DashboardStatistics,
+  SourceStatistics,
+  UserStatistics,
+} from '../models/Statistics';
+
+export class StatisticsService {
+  static createDailyStatistics(
+    leads: Lead[],
+    networkContacts: NetworkContact[],
+    date: string = new Date().toISOString().slice(0, 10)
+  ): DailyStatistics {
+    const todayLeadCalls = leads.filter((lead) =>
+      lead.lastCall?.startsWith(date)
+    );
+
+    const todayNetworkCalls = networkContacts.filter((contact) =>
+      contact.lastContact?.startsWith(date)
+    );
+
+    const reached = leads.filter(
+      (lead) => lead.status === 'erreicht' || lead.status === 'qualifiziert'
+    ).length;
+
+    const notReached = leads.filter((lead) =>
+      lead.status.startsWith('nicht_erreicht')
+    ).length;
+
+    const qualified = leads.filter((lead) => lead.qualified).length;
+
+    const callbacks = leads.filter((lead) =>
+      lead.nextCall?.startsWith(date)
+    ).length;
+
+    const mailsSent = leads.filter(
+      (lead) => lead.status === 'mail_1' || lead.status === 'mail_2'
+    ).length;
+
+    return {
+      date,
+      totalCalls: todayLeadCalls.length + todayNetworkCalls.length,
+      reached,
+      notReached,
+      qualified,
+      callbacks,
+      mailsSent,
+      networkCalls: todayNetworkCalls.length,
+      leadCalls: todayLeadCalls.length,
+    };
+  }
+
+  static createUserStatistics(leads: Lead[], userId: string): UserStatistics {
+    const userLeads = leads.filter((lead) => lead.owner === userId);
+
+    const calls = userLeads.reduce(
+      (total, lead) => total + lead.callAttempts,
+      0
+    );
+
+    const reached = userLeads.filter(
+      (lead) => lead.status === 'erreicht' || lead.status === 'qualifiziert'
+    ).length;
+
+    const qualified = userLeads.filter((lead) => lead.qualified).length;
+
+    return {
+      userId,
+      calls,
+      reached,
+      qualified,
+      callbackRate: calls === 0 ? 0 : Math.round((reached / calls) * 100),
+      qualificationRate:
+        reached === 0 ? 0 : Math.round((qualified / reached) * 100),
+    };
+  }
+
+  static createSourceStatistics(leads: Lead[]): SourceStatistics[] {
+    const sources = Array.from(new Set(leads.map((lead) => lead.source)));
+
+    return sources.map((source) => {
+      const sourceLeads = leads.filter((lead) => lead.source === source);
+
+      return {
+        source,
+        imported: sourceLeads.length,
+        qualified: sourceLeads.filter((lead) => lead.qualified).length,
+        exported: sourceLeads.filter((lead) => lead.exported).length,
+      };
+    });
+  }
+
+  static createDashboardStatistics(
+    leads: Lead[],
+    networkContacts: NetworkContact[],
+    userIds: string[]
+  ): DashboardStatistics {
+    const today = this.createDailyStatistics(leads, networkContacts);
+
+    return {
+      today,
+      week: today,
+      month: today,
+      users: userIds.map((userId) => this.createUserStatistics(leads, userId)),
+      sources: this.createSourceStatistics(leads),
+    };
+  }
+
+  static calculateReachRate(calls: number, reached: number): number {
+    if (calls === 0) return 0;
+    return Math.round((reached / calls) * 100);
+  }
+
+  static calculateQualificationRate(reached: number, qualified: number): number {
+    if (reached === 0) return 0;
+    return Math.round((qualified / reached) * 100);
+  }
+
+  static calculateExportRate(qualified: number, exported: number): number {
+    if (qualified === 0) return 0;
+    return Math.round((exported / qualified) * 100);
+  }
+}
