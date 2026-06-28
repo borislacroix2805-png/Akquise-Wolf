@@ -1,0 +1,122 @@
+export type LeadArea = 'lead' | 'network';
+
+export type LeadStatus =
+  | 'neu'
+  | 'heute_anrufen'
+  | 'nicht_erreicht_1'
+  | 'nicht_erreicht_2'
+  | 'nicht_erreicht_3'
+  | 'nicht_erreicht_4'
+  | 'mail_1'
+  | 'mail_2'
+  | 'erreicht'
+  | 'qualifiziert'
+  | 'nicht_passend'
+  | 'exportiert'
+  | 'archiv';
+
+export type LeadPriority = 'A' | 'B' | 'C';
+
+export type LeadSource =
+  | 'excel'
+  | 'csv'
+  | 'hubspot'
+  | 'salesforce'
+  | 'pipedrive'
+  | 'zoho'
+  | 'dynamics'
+  | 'api'
+  | 'manuell';
+
+export type PhoneResult =
+  | 'erreicht'
+  | 'nicht_erreicht'
+  | 'mail_gesendet'
+  | 'wiedervorlage'
+  | 'qualifiziert'
+  | 'nicht_passend';
+
+export interface PhoneHistory {
+  id: string;
+  leadId: string;
+  date: string;
+  result: PhoneResult;
+  note?: string;
+  nextFollowUp?: string;
+  userId?: string;
+}
+
+export interface LeadNote {
+  id: string;
+  date: string;
+  text: string;
+  userId?: string;
+}
+
+export interface Lead {
+  id: string;
+
+  area: LeadArea;
+
+  company: string;
+  contact: string;
+
+  phone: string;
+  mobile?: string;
+  email?: string;
+  website?: string;
+
+  street?: string;
+  zip?: string;
+  city?: string;
+  country?: string;
+
+  category?: string;
+  industry?: string;
+
+  status: LeadStatus;
+  priority: LeadPriority;
+
+  owner?: string;
+
+  source: LeadSource;
+  sourceName?: string;
+  importProfileId?: string;
+  importedAt?: string;
+
+  callAttempts: number;
+  lastCall?: string;
+  nextCall?: string;
+  nextAction?: string;
+
+  qualified: boolean;
+  qualifiedAt?: string;
+
+  exported: boolean;
+  exportedAt?: string;
+  exportTarget?: string;
+
+  tags: string[];
+
+  notes: LeadNote[];
+  history: PhoneHistory[];
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const leadStatusLabels: Record<LeadStatus, string> = {
+  neu: 'Neu',
+  heute_anrufen: 'Heute anrufen',
+  nicht_erreicht_1: 'Nicht erreicht 1',
+  nicht_erreicht_2: 'Nicht erreicht 2',
+  nicht_erreicht_3: 'Nicht erreicht 3',
+  nicht_erreicht_4: 'Nicht erreicht 4',
+  mail_1: 'Mail 1 gesendet',
+  mail_2: 'Mail 2 gesendet',
+  erreicht: 'Erreicht',
+  qualifiziert: 'Qualifiziert',
+  nicht_passend: 'Nicht passend',
+  exportiert: 'Exportiert',
+  archiv: 'Archiv',
+};
