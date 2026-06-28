@@ -1,0 +1,68 @@
+import { Phone, Target, Network, Upload, Download } from 'lucide-react';
+
+type HeroProps = {
+  onSession: () => void;
+};
+
+export function Hero({ onSession }: HeroProps) {
+  return (
+    <section className="awHero card">
+      <div className="awHeroContent">
+        <div className="awHeroBadge">
+          <img src="/alpha-wolf.png" alt="Akquise Wolf" />
+          <span>Telefon-Akquise-Plattform</span>
+        </div>
+
+        <h2>
+          Importieren.
+          <br />
+          Telefonieren.
+          <br />
+          <span>Qualifizieren.</span>
+        </h2>
+
+        <p className="muted">
+          Akquise Wolf fokussiert dein Team auf das Wesentliche:
+          Kontakte erreichen, qualifizierte Leads erzeugen und sauber exportieren.
+        </p>
+
+        <div className="awHeroActions">
+          <button className="btn btnPrimary" onClick={onSession}>
+            <Phone size={20} />
+            Telefon-Session starten
+          </button>
+
+          <button className="btn">
+            <Upload size={18} />
+            Import
+          </button>
+
+          <button className="btn">
+            <Download size={18} />
+            Export
+          </button>
+        </div>
+      </div>
+
+      <div className="awHeroStats">
+        <div>
+          <Phone size={18} />
+          <strong>42</strong>
+          <span>Anrufe heute</span>
+        </div>
+
+        <div>
+          <Target size={18} />
+          <strong>8</strong>
+          <span>Qualifiziert</span>
+        </div>
+
+        <div>
+          <Network size={18} />
+          <strong>5</strong>
+          <span>Netzwerk</span>
+        </div>
+      </div>
+    </section>
+  );
+}
