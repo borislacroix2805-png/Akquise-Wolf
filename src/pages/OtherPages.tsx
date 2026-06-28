@@ -1,0 +1,4 @@
+import { users } from '../data/sample';
+export function UsersPage(){return <div className="card"><h2>Benutzer</h2><p className="muted">Sprint 1: Rollen vorbereitet. Sprint 2: echte Benutzerverwaltung mit Cloudflare D1.</p><div className="list">{users.map(u=><div className="row" key={u.id}><strong>{u.name}</strong><span>{u.role}</span><span>{u.id}</span><span className="badge green">aktiv</span></div>)}</div></div>}
+export function StatsPage(){return <div className="card"><h2>Statistik</h2><p className="muted">Telefonquote, Teamleistung und Tagesziele sind vorbereitet. Die Daten kommen aktuell aus lokalen Leads und Sessiondaten.</p></div>}
+export function SettingsPage(){return <div className="card"><h2>Einstellungen</h2><p className="muted">Akquise Wolf Sprint 1 nutzt lokalen Browser-Speicher. Sprint 2/3 ergänzt Login, Cloudflare D1 und Teamfähigkeit.</p></div>}

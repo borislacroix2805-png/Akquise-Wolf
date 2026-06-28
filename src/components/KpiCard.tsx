@@ -1,0 +1,2 @@
+import { ReactNode } from 'react';
+export function KpiCard({icon,label,value,trend,color='red'}:{icon:ReactNode;label:string;value:string|number;trend?:string;color?:'red'|'green'|'blue'|'yellow'}){return <div className="card kpi"><div className={`kpiIcon ${color}`}>{icon}</div><span className="muted">{label}</span><strong>{value}</strong>{trend&&<div className="trend">↗ {trend}</div>}<div className="progressBar"><div style={{width: typeof value==='number'?`${Math.min(100,Number(value))}%`:'48%'}}/></div></div>}

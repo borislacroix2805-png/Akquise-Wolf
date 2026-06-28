@@ -1,0 +1,15 @@
+import { Lead, User } from '../types';
+export const users: User[] = [
+ {id:'boris',name:'Boris Lacroix',role:'Admin',avatar:'BL'},
+ {id:'anna',name:'Anna Wolf',role:'Vertrieb',avatar:'AW'},
+ {id:'lisa',name:'Lisa Netzwerk',role:'Netzwerk',avatar:'LN'},
+ {id:'markus',name:'Markus Dach',role:'Teamleiter',avatar:'MD'}
+];
+export const initialLeads: Lead[] = [
+ {id:'1',area:'kunden',company:'Müller GmbH',contact:'Thomas Müller',role:'Geschäftsführer',phone:'+491721234567',email:'info@mueller.de',city:'Hamburg',category:'PV',source:'Kaltakquise',owner:'boris',status:'Anrufen',priority:'Hoch',note:'Interessiert für PV-Anlage 10 kWp',nextAction:'Heute anrufen',dueDate:new Date().toISOString().slice(0,10),attempts:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+ {id:'2',area:'kunden',company:'Schmidt Dachbau',contact:'Michael Schmidt',role:'Inhaber',phone:'+491721111222',email:'m.schmidt@dach.de',city:'Berlin',category:'Dach',source:'Google',owner:'anna',status:'Nicht erreicht 1',priority:'Mittel',note:'Dachsanierung ansprechen',nextAction:'Morgen wieder anrufen',dueDate:new Date(Date.now()+86400000).toISOString().slice(0,10),attempts:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+ {id:'3',area:'kunden',company:'Green Energy AG',contact:'Julia Becker',role:'Einkauf',phone:'+491721333444',email:'j.becker@green.de',city:'München',category:'PV',source:'Website',owner:'boris',status:'Termin',priority:'Hoch',note:'Termin für Angebot',nextAction:'Termin vorbereiten',dueDate:new Date().toISOString().slice(0,10),attempts:2,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+ {id:'4',area:'netzwerk',company:'Solar Future',contact:'David Wagner',role:'Partner',phone:'+491721555666',email:'d.wagner@solar.de',city:'Köln',category:'Partner',source:'Empfehlung',owner:'lisa',status:'Kontakt hergestellt',priority:'Mittel',note:'Möglicher Kooperationspartner',nextAction:'Kennenlernen planen',dueDate:new Date(Date.now()+3*86400000).toISOString().slice(0,10),attempts:1,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+ {id:'5',area:'netzwerk',company:'Handwerk Heroes',contact:'Peter Weber',role:'Inhaber',phone:'+491721777888',email:'p.weber@hh.de',city:'Stuttgart',category:'Handwerker',source:'Netzwerk',owner:'lisa',status:'Anrufen',priority:'Sofort',note:'Dachpartner für Kooperation',nextAction:'Heute kontaktieren',dueDate:new Date(Date.now()-86400000).toISOString().slice(0,10),attempts:0,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()},
+ {id:'6',area:'kunden',company:'Haus & Dach',contact:'Frank Scholz',role:'Inhaber',phone:'+491721868777',email:'f.scholz@hausdach.de',city:'Kiel',category:'Dach + PV',source:'Facebook',owner:'markus',status:'Nachfassen',priority:'Hoch',note:'Angebot liegt vor',nextAction:'Nachfassen',dueDate:new Date(Date.now()-2*86400000).toISOString().slice(0,10),attempts:3,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}
+];
