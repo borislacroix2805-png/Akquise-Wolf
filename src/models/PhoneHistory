@@ -1,0 +1,42 @@
+export type PhoneCallResult =
+  | 'erreicht'
+  | 'nicht_erreicht'
+  | 'besetzt'
+  | 'mailbox'
+  | 'rueckruf'
+  | 'termin'
+  | 'qualifiziert'
+  | 'kein_interesse';
+
+export interface PhoneHistory {
+  id: string;
+
+  contactId: string;
+
+  area: 'lead' | 'network';
+
+  date: string;
+
+  duration?: number;
+
+  result: PhoneCallResult;
+
+  note?: string;
+
+  nextCall?: string;
+
+  userId?: string;
+
+  createdAt: string;
+}
+
+export const phoneResultLabels: Record<PhoneCallResult, string> = {
+  erreicht: 'Erreicht',
+  nicht_erreicht: 'Nicht erreicht',
+  besetzt: 'Besetzt',
+  mailbox: 'Mailbox',
+  rueckruf: 'Rückruf vereinbart',
+  termin: 'Termin vereinbart',
+  qualifiziert: 'Qualifiziert',
+  kein_interesse: 'Kein Interesse'
+};
