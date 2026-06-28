@@ -1,0 +1,55 @@
+export interface DailyStatistics {
+  date: string;
+
+  totalCalls: number;
+
+  reached: number;
+
+  notReached: number;
+
+  qualified: number;
+
+  callbacks: number;
+
+  mailsSent: number;
+
+  networkCalls: number;
+
+  leadCalls: number;
+}
+
+export interface UserStatistics {
+  userId: string;
+
+  calls: number;
+
+  reached: number;
+
+  qualified: number;
+
+  callbackRate: number;
+
+  qualificationRate: number;
+}
+
+export interface SourceStatistics {
+  source: string;
+
+  imported: number;
+
+  qualified: number;
+
+  exported: number;
+}
+
+export interface DashboardStatistics {
+  today: DailyStatistics;
+
+  week: DailyStatistics;
+
+  month: DailyStatistics;
+
+  users: UserStatistics[];
+
+  sources: SourceStatistics[];
+}
