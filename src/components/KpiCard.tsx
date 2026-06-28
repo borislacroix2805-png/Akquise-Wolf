@@ -1,2 +1,45 @@
-import { ReactNode } from 'react';
-export function KpiCard({icon,label,value,trend,color='red'}:{icon:ReactNode;label:string;value:string|number;trend?:string;color?:'red'|'green'|'blue'|'yellow'}){return <div className="card kpi"><div className={`kpiIcon ${color}`}>{icon}</div><span className="muted">{label}</span><strong>{value}</strong>{trend&&<div className="trend">↗ {trend}</div>}<div className="progressBar"><div style={{width: typeof value==='number'?`${Math.min(100,Number(value))}%`:'48%'}}/></div></div>}
+import { ArrowUpRight } from "lucide-react";
+import { ReactNode } from "react";
+
+type Props = {
+  icon: ReactNode;
+  label: string;
+  value: string | number;
+  trend?: string;
+  color?: "red" | "green" | "blue" | "yellow";
+};
+
+export function KpiCard({
+  icon,
+  label,
+  value,
+  trend,
+  color = "red",
+}: Props) {
+  return (
+    <div className={`kpiCard ${color}`}>
+      <div className="kpiTop">
+        <div className="kpiIcon">
+          {icon}
+        </div>
+
+        {trend && (
+          <div className="kpiTrend">
+            <ArrowUpRight size={14} />
+            {trend}
+          </div>
+        )}
+      </div>
+
+      <div className="kpiContent">
+        <span className="kpiLabel">{label}</span>
+
+        <strong className="kpiValue">
+          {value}
+        </strong>
+      </div>
+
+      <div className="kpiGlow"></div>
+    </div>
+  );
+}
