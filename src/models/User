@@ -1,0 +1,55 @@
+export type UserRole =
+  | 'admin'
+  | 'teamleiter'
+  | 'vertrieb'
+  | 'marketing'
+  | 'gast';
+
+export interface DailyGoal {
+  calls: number;
+  contacts: number;
+  qualified: number;
+}
+
+export interface UserStatistics {
+  callsToday: number;
+  reachedToday: number;
+  qualifiedToday: number;
+  appointmentsToday: number;
+
+  callsMonth: number;
+  reachedMonth: number;
+  qualifiedMonth: number;
+}
+
+export interface User {
+  id: string;
+
+  firstName: string;
+  lastName: string;
+
+  email: string;
+
+  phone?: string;
+
+  role: UserRole;
+
+  active: boolean;
+
+  avatar?: string;
+
+  dailyGoal: DailyGoal;
+
+  statistics: UserStatistics;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const userRoleLabels: Record<UserRole, string> = {
+  admin: 'Administrator',
+  teamleiter: 'Teamleiter',
+  vertrieb: 'Vertrieb',
+  marketing: 'Marketing',
+  gast: 'Gast'
+};
