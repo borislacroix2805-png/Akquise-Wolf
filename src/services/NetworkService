@@ -1,0 +1,120 @@
+import { NetworkContact, NetworkStatus } from '../models/NetworkContact';
+
+export class NetworkService {
+  static updateStatus(
+    contact: NetworkContact,
+    status: NetworkStatus
+  ): NetworkContact {
+    return {
+      ...contact,
+      status,
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static setNextContact(
+    contact: NetworkContact,
+    nextContact: string,
+    nextAction?: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      nextContact,
+      nextAction,
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static markContactEstablished(
+    contact: NetworkContact,
+    note?: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      status: 'kontakt_hergestellt',
+      lastContact: new Date().toISOString(),
+      history: [
+        ...contact.history,
+        {
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+          action: 'Kontakt hergestellt',
+          note,
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static markCooperation(
+    contact: NetworkContact,
+    note?: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      status: 'kooperation',
+      history: [
+        ...contact.history,
+        {
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+          action: 'Kooperation',
+          note,
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static addTag(
+    contact: NetworkContact,
+    tag: string
+  ): NetworkContact {
+    if (contact.tags.includes(tag)) return contact;
+
+    return {
+      ...contact,
+      tags: [...contact.tags, tag],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static removeTag(
+    contact: NetworkContact,
+    tag: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      tags: contact.tags.filter((t) => t !== tag),
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static addNote(
+    contact: NetworkContact,
+    note: string
+  ): NetworkContact {
+    return {
+      ...contact,
+      notes: [...contact.notes, note],
+      history: [
+        ...contact.history,
+        {
+          id: crypto.randomUUID(),
+          date: new Date().toISOString(),
+          action: 'Notiz hinzugefügt',
+          note,
+        },
+      ],
+      updatedAt: new Date().toISOString(),
+    };
+  }
+
+  static archive(contact: NetworkContact): NetworkContact {
+    return {
+      ...contact,
+      status: 'archiv',
+      updatedAt: new Date().toISOString(),
+    };
+  }
+}
