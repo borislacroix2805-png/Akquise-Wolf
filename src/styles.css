@@ -650,3 +650,716 @@ textarea {
     flex-direction: column;
   }
 }
+/* ==========================================
+   AKQUISE WOLF DASHBOARD 3.0
+   Teil 1: Layout + Hero
+========================================== */
+
+.awDashboard {
+  display: grid;
+  gap: 24px;
+}
+
+.awDashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.awDashboardGridWide {
+  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.8fr);
+}
+
+.awSideStack {
+  display: grid;
+  gap: 24px;
+}
+
+.awHero {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+  gap: 32px;
+  align-items: center;
+  background:
+    radial-gradient(circle at 82% 45%, rgba(239, 68, 68, 0.28), transparent 34%),
+    linear-gradient(135deg, rgba(9, 12, 18, 0.98), rgba(23, 30, 44, 0.96));
+}
+
+.awHero::before {
+  content: "";
+  position: absolute;
+  inset: -120px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.12), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(56, 189, 248, 0.08), transparent 28%);
+  pointer-events: none;
+}
+
+.awHeroContent {
+  position: relative;
+  z-index: 2;
+}
+
+.awHeroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(239, 68, 68, 0.28);
+  background: rgba(239, 68, 68, 0.08);
+  color: #fecaca;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+}
+
+.awHeroBadge img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.awHero h2 {
+  margin: 0 0 22px;
+  font-size: clamp(42px, 6vw, 74px);
+  line-height: 0.92;
+  letter-spacing: -2.6px;
+}
+
+.awHero h2 span {
+  color: var(--red);
+}
+
+.awHero p {
+  max-width: 640px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.awHeroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.awHeroStats {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 14px;
+}
+
+.awHeroStats div {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.045);
+  display: grid;
+  gap: 8px;
+}
+
+.awHeroStats svg {
+  color: var(--red);
+}
+
+.awHeroStats strong {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.awHeroStats span {
+  color: var(--muted);
+  font-size: 13px;
+}
+/* ==========================================
+   Dashboard 3.0
+   Teil 2 – KPI Grid
+========================================== */
+
+.awKpiGrid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+.awKpiCard{
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:22px;
+    border-radius:22px;
+    background:linear-gradient(180deg,#151922,#10141b);
+    border:1px solid rgba(255,255,255,.06);
+    transition:.25s;
+    cursor:pointer;
+}
+
+.awKpiCard:hover{
+    transform:translateY(-5px);
+    border-color:rgba(239,68,68,.35);
+    box-shadow:0 18px 40px rgba(0,0,0,.35);
+}
+
+.awKpiCard::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(255,255,255,.03),transparent);
+    pointer-events:none;
+}
+
+.awKpiIcon{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+    background:rgba(239,68,68,.12);
+}
+
+.awKpiCard.red .awKpiIcon{
+    color:#ef4444;
+    background:rgba(239,68,68,.14);
+}
+
+.awKpiCard.green .awKpiIcon{
+    color:#22c55e;
+    background:rgba(34,197,94,.14);
+}
+
+.awKpiCard.blue .awKpiIcon{
+    color:#38bdf8;
+    background:rgba(56,189,248,.14);
+}
+
+.awKpiCard.yellow .awKpiIcon{
+    color:#f59e0b;
+    background:rgba(245,158,11,.14);
+}
+
+.awKpiCard span{
+    display:block;
+    color:#94a3b8;
+    font-size:13px;
+    margin-bottom:6px;
+}
+
+.awKpiCard strong{
+    display:block;
+    font-size:34px;
+    font-weight:800;
+    line-height:1;
+    margin-bottom:6px;
+}
+
+.awKpiCard p{
+    margin:0;
+    font-size:13px;
+    color:#22c55e;
+}
+
+.awKpiCard.red p{
+    color:#ef4444;
+}
+
+.awKpiCard.blue p{
+    color:#38bdf8;
+}
+
+.awKpiCard.yellow p{
+    color:#fbbf24;
+}
+/* ==========================================
+   Dashboard 3.0
+   Teil 3 – Lead & Network Pipeline
+========================================== */
+
+.awPipelineCard{
+    position:relative;
+    overflow:hidden;
+    padding:28px;
+}
+
+.awPipelineCard::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+        radial-gradient(circle at top right,
+        rgba(239,68,68,.08),
+        transparent 35%);
+    pointer-events:none;
+}
+
+.awSectionHeader{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:26px;
+    gap:20px;
+}
+
+.awSectionHeader h3{
+    margin:6px 0 0;
+    font-size:26px;
+    font-weight:700;
+}
+
+.awSectionHint{
+    color:#94a3b8;
+    font-size:13px;
+    white-space:nowrap;
+}
+
+.awPipeline{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:18px;
+}
+
+.awPipelineStage{
+    position:relative;
+    padding:22px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.06);
+    background:rgba(255,255,255,.03);
+    transition:.25s;
+    text-align:center;
+}
+
+.awPipelineStage:hover{
+    transform:translateY(-4px);
+    border-color:rgba(239,68,68,.35);
+    box-shadow:0 18px 35px rgba(0,0,0,.35);
+}
+
+.awPipelineIcon{
+    width:54px;
+    height:54px;
+    border-radius:16px;
+    margin:0 auto 16px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(239,68,68,.12);
+}
+
+.awPipelineStage.red .awPipelineIcon{
+    color:#ef4444;
+    background:rgba(239,68,68,.14);
+}
+
+.awPipelineStage.green .awPipelineIcon{
+    color:#22c55e;
+    background:rgba(34,197,94,.14);
+}
+
+.awPipelineStage.blue .awPipelineIcon{
+    color:#38bdf8;
+    background:rgba(56,189,248,.14);
+}
+
+.awPipelineStage.yellow .awPipelineIcon{
+    color:#f59e0b;
+    background:rgba(245,158,11,.14);
+}
+
+.awPipelineStage span{
+    display:block;
+    color:#94a3b8;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.awPipelineStage strong{
+    display:block;
+    font-size:36px;
+    font-weight:800;
+    line-height:1;
+}
+
+.awPipelineArrow{
+    position:absolute;
+    top:50%;
+    right:-14px;
+    transform:translateY(-50%);
+    color:#ef4444;
+    opacity:.35;
+}
+
+.awPipelineStage:last-child .awPipelineArrow{
+    display:none;
+}
+
+/* Pipeline Glow */
+
+.awPipelineStage.red{
+    box-shadow:0 0 18px rgba(239,68,68,.08);
+}
+
+.awPipelineStage.green{
+    box-shadow:0 0 18px rgba(34,197,94,.08);
+}
+
+.awPipelineStage.blue{
+    box-shadow:0 0 18px rgba(56,189,248,.08);
+}
+
+.awPipelineStage.yellow{
+    box-shadow:0 0 18px rgba(245,158,11,.08);
+}
+/* ==========================================
+   Dashboard 3.0
+   Teil 4 – Today Calls + Goal + Ring
+========================================== */
+
+.awTodayCalls {
+  padding: 28px;
+}
+
+.awTodayList {
+  display: grid;
+  gap: 14px;
+}
+
+.awTodayRow {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr) 90px auto auto;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.035);
+  transition: .25s;
+}
+
+.awTodayRow:hover {
+  transform: translateY(-3px);
+  border-color: rgba(239,68,68,.32);
+  background: rgba(255,255,255,.055);
+}
+
+.awPriority {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.awPriority.A {
+  color: #fecaca;
+  background: rgba(239,68,68,.16);
+}
+
+.awPriority.B {
+  color: #fde68a;
+  background: rgba(245,158,11,.16);
+}
+
+.awPriority.C {
+  color: #bfdbfe;
+  background: rgba(56,189,248,.16);
+}
+
+.awTodayCompany {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.awTodayCompany svg {
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+.awTodayCompany strong {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.awTodayCompany span {
+  display: block;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.awTodayTime {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.awGoalCard,
+.awPerformanceRing {
+  padding: 28px;
+}
+
+.awGoalCard .awSectionHeader svg,
+.awPerformanceRing .awSectionHeader svg {
+  color: #ef4444;
+}
+
+.awGoalNumbers {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.awGoalNumbers strong {
+  font-size: 58px;
+  line-height: .9;
+}
+
+.awGoalNumbers span {
+  color: #94a3b8;
+  font-size: 16px;
+}
+
+.awGoalBar {
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,.08);
+  margin-bottom: 20px;
+}
+
+.awGoalProgress {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ef4444, #fb7185);
+  box-shadow: 0 0 18px rgba(239,68,68,.35);
+}
+
+.awGoalFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.awGoalFooter > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.awGoalFooter svg {
+  color: #ef4444;
+}
+
+.awGoalFooter strong {
+  display: block;
+}
+
+.awGoalFooter span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.awGoalQuote {
+  color: #fecaca;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.45;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+
+.awRingWrap {
+  display: grid;
+  place-items: center;
+  padding: 18px 0 10px;
+}
+
+.awRing {
+  width: 190px;
+  height: 190px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 34px rgba(239,68,68,.18);
+}
+
+.awRingInner {
+  width: 128px;
+  height: 128px;
+  border-radius: 999px;
+  background: #0b0d12;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,.06);
+}
+
+.awRingInner strong {
+  font-size: 38px;
+  line-height: 1;
+}
+
+.awRingInner span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.awRingSubline {
+  text-align: center;
+  color: #94a3b8;
+  margin: 8px 0 0;
+}
+/* ==========================================
+   Dashboard 3.0
+   Teil 5 – Activity Feed + Responsive
+========================================== */
+
+.awActivityFeed {
+  padding: 28px;
+}
+
+.awActivityList {
+  display: grid;
+  gap: 14px;
+}
+
+.awActivityItem {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 24px;
+  gap: 14px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.06);
+  background: rgba(255,255,255,.035);
+  transition: .25s;
+}
+
+.awActivityItem:hover {
+  transform: translateY(-3px);
+  border-color: rgba(239,68,68,.32);
+}
+
+.awActivityIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+}
+
+.awActivityIcon.red { color:#ef4444; background:rgba(239,68,68,.14); }
+.awActivityIcon.green { color:#22c55e; background:rgba(34,197,94,.14); }
+.awActivityIcon.blue { color:#38bdf8; background:rgba(56,189,248,.14); }
+.awActivityIcon.yellow { color:#f59e0b; background:rgba(245,158,11,.14); }
+
+.awActivityContent > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.awActivityContent strong {
+  display: block;
+}
+
+.awActivityContent span,
+.awActivityContent p {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.awActivityContent p {
+  margin: 6px 0 0;
+}
+
+.awActivityCheck {
+  color: #22c55e;
+}
+
+@keyframes awFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.awDashboard > * {
+  animation: awFadeUp .35s ease both;
+}
+
+@media (max-width: 1200px) {
+  .awDashboardGrid,
+  .awDashboardGridWide {
+    grid-template-columns: 1fr;
+  }
+
+  .awPipeline {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .awPipelineArrow {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .awHero {
+    grid-template-columns: 1fr;
+  }
+
+  .awTodayRow {
+    grid-template-columns: 1fr;
+  }
+
+  .awSectionHeader {
+    flex-direction: column;
+  }
+
+  .awSectionHint {
+    white-space: normal;
+  }
+
+  .awActivityItem {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .awActivityCheck {
+    display: none;
+  }
+
+  .awPipeline {
+    grid-template-columns: 1fr;
+  }
+
+  .awGoalFooter {
+    grid-template-columns: 1fr;
+  }
+}
