@@ -1571,3 +1571,49 @@ margin-top:30px;
   line-height: 1.35;
   color: #94a3b8;
 }
+/* ==========================================
+   Today Calls 3.1
+========================================== */
+
+.awTodayCalls {
+  min-height: 100%;
+}
+
+.awTodayRow {
+  grid-template-columns: 82px minmax(0, 1fr) 84px 120px 52px;
+}
+
+.awTodayRow .btn {
+  height: 42px;
+  border-radius: 13px;
+}
+
+.awTodayCompany strong {
+  font-size: 15px;
+}
+
+.awTodayCompany span {
+  margin-top: 3px;
+}
+
+.awPriority {
+  border: 1px solid rgba(255,255,255,.07);
+}
+
+.awPriority.A {
+  box-shadow: 0 0 18px rgba(239,68,68,.16);
+}
+
+.awPriority.B {
+  box-shadow: 0 0 18px rgba(245,158,11,.12);
+}
+
+.awPriority.C {
+  box-shadow: 0 0 18px rgba(56,189,248,.12);
+}
+
+@media(max-width:760px){
+  .awTodayRow {
+    grid-template-columns: 1fr;
+  }
+}
