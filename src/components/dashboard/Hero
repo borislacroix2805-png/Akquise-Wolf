@@ -1,4 +1,4 @@
-import { Phone, Target, Network, Upload, Download } from 'lucide-react';
+import { Phone, Target, TrendingUp } from 'lucide-react';
 
 type HeroProps = {
   onSession: () => void;
@@ -6,62 +6,49 @@ type HeroProps = {
 
 export function Hero({ onSession }: HeroProps) {
   return (
-    <section className="awHero card">
+    <section className="awHero card awHero31">
       <div className="awHeroContent">
-        <div className="awHeroBadge">
-          <img src="/alpha-wolf.png" alt="Akquise Wolf" />
-          <span>Telefon-Akquise-Plattform</span>
-        </div>
+        <p className="eyebrow">AKQUISE WOLF 3.1</p>
 
         <h2>
-          Importieren.
+          Lead Engine.
           <br />
-          Telefonieren.
-          <br />
-          <span>Qualifizieren.</span>
+          <span>Network Engine.</span>
         </h2>
 
         <p className="muted">
-          Akquise Wolf fokussiert dein Team auf das Wesentliche:
-          Kontakte erreichen, qualifizierte Leads erzeugen und sauber exportieren.
+          Dein Cockpit für aktive Akquise, schnelle Telefon-Sessions und
+          systematischen Netzwerkaufbau.
         </p>
 
-        <div className="awHeroActions">
-          <button className="btn btnPrimary" onClick={onSession}>
-            <Phone size={20} />
-            Telefon-Session starten
-          </button>
+        <div className="awHeroMiniStats">
+          <div>
+            <Phone size={19} />
+            <strong>15% mehr</strong>
+            <span>als gestern</span>
+          </div>
 
-          <button className="btn">
-            <Upload size={18} />
-            Import
-          </button>
+          <div>
+            <Target size={19} />
+            <strong>Tagesziel</strong>
+            <span>120 Anrufe</span>
+          </div>
 
-          <button className="btn">
-            <Download size={18} />
-            Export
-          </button>
+          <div>
+            <TrendingUp size={19} />
+            <strong>43%</strong>
+            <span>Quote</span>
+          </div>
         </div>
+
+        <button className="btn btnPrimary awHeroMainButton" onClick={onSession}>
+          <Phone size={20} />
+          Telefon-Session starten
+        </button>
       </div>
 
-      <div className="awHeroStats">
-        <div>
-          <Phone size={18} />
-          <strong>42</strong>
-          <span>Anrufe heute</span>
-        </div>
-
-        <div>
-          <Target size={18} />
-          <strong>8</strong>
-          <span>Qualifiziert</span>
-        </div>
-
-        <div>
-          <Network size={18} />
-          <strong>5</strong>
-          <span>Netzwerk</span>
-        </div>
+      <div className="awHeroWolf">
+        <img src="/alpha-wolf.png" alt="Akquise Wolf" />
       </div>
     </section>
   );
