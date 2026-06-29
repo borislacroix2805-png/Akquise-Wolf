@@ -8,13 +8,17 @@ type PerformanceRingProps = {
 
 export function PerformanceRing({
   value = 43,
-  label = 'Erreichbarkeit',
-  subline = '18 von 42 erreicht',
+  label = 'Telefonquote',
+  subline = '18 von 42 Kontakten erreicht',
 }: PerformanceRingProps) {
   const safeValue = Math.min(Math.max(value, 0), 100);
+  const radius = 78;
+  const stroke = 14;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (safeValue / 100) * circumference;
 
   return (
-    <section className="card awPerformanceRing">
+    <section className="card awPerformanceRing awPerformanceRing31">
       <div className="awSectionHeader">
         <div>
           <p className="eyebrow">Performance</p>
@@ -24,17 +28,30 @@ export function PerformanceRing({
         <TrendingUp size={26} />
       </div>
 
-      <div className="awRingWrap">
-        <div
-          className="awRing"
-          style={{
-            background: `conic-gradient(#ef4444 0 ${safeValue}%, rgba(255,255,255,.08) ${safeValue}% 100%)`,
-          }}
-        >
-          <div className="awRingInner">
-            <strong>{safeValue}%</strong>
-            <span>{label}</span>
-          </div>
+      <div className="awSvgRingWrap">
+        <svg className="awSvgRing" viewBox="0 0 200 200">
+          <circle
+            className="awSvgRingTrack"
+            cx="100"
+            cy="100"
+            r={radius}
+            strokeWidth={stroke}
+          />
+
+          <circle
+            className="awSvgRingProgress"
+            cx="100"
+            cy="100"
+            r={radius}
+            strokeWidth={stroke}
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+          />
+        </svg>
+
+        <div className="awSvgRingCenter">
+          <strong>{safeValue}%</strong>
+          <span>{label}</span>
         </div>
       </div>
 
