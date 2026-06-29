@@ -1,0 +1,44 @@
+import { TrendingUp } from 'lucide-react';
+
+type PerformanceRingProps = {
+  value?: number;
+  label?: string;
+  subline?: string;
+};
+
+export function PerformanceRing({
+  value = 43,
+  label = 'Erreichbarkeit',
+  subline = '18 von 42 erreicht',
+}: PerformanceRingProps) {
+  const safeValue = Math.min(Math.max(value, 0), 100);
+
+  return (
+    <section className="card awPerformanceRing">
+      <div className="awSectionHeader">
+        <div>
+          <p className="eyebrow">Performance</p>
+          <h3>Telefonquote</h3>
+        </div>
+
+        <TrendingUp size={26} />
+      </div>
+
+      <div className="awRingWrap">
+        <div
+          className="awRing"
+          style={{
+            background: `conic-gradient(#ef4444 0 ${safeValue}%, rgba(255,255,255,.08) ${safeValue}% 100%)`,
+          }}
+        >
+          <div className="awRingInner">
+            <strong>{safeValue}%</strong>
+            <span>{label}</span>
+          </div>
+        </div>
+      </div>
+
+      <p className="awRingSubline">{subline}</p>
+    </section>
+  );
+}
