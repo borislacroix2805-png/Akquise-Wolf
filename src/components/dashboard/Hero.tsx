@@ -48,7 +48,7 @@ export function Hero({ onSession }: HeroProps) {
       </div>
 
       <div className="awHeroWolf">
-        <img src="/alpha-wolf.png" alt="Akquise Wolf" />
+        <img src="/wolf-png.png?v=2" alt="Akquise Wolf" />
       </div>
     </section>
   );
