@@ -1,6 +1,194 @@
-import { Archive, Calendar, Check, Mail, MessageSquare, Phone, RotateCcw, X } from 'lucide-react';
-import { Lead, LeadStatus, SessionStats } from '../types';
-import { updateAfterStatus } from '../utils/lead';
-export function SessionPage({leads,setLeads,session,setSession}:{leads:Lead[];setLeads:(l:Lead[])=>void;session:SessionStats;setSession:(s:SessionStats)=>void}){const queue=leads.filter(l=>l.status!=='Archiv'&&l.status!=='Gewonnen'&&l.status!=='Verloren');const current=queue[0];function apply(status:LeadStatus){if(!current)return;const updated=updateAfterStatus(current,status);setLeads(leads.map(l=>l.id===current.id?updated:l));setSession({...session,calls:session.calls+1,reached:session.reached+(status==='Kontakt hergestellt'||status==='Termin'?1:0),appointments:session.appointments+(status==='Termin'?1:0),notReached:session.notReached+(status.startsWith('Nicht erreicht')?1:0),contacts:session.contacts+(status==='Kontakt hergestellt'?1:0),startedAt:session.startedAt||new Date().toISOString()});}
- if(!current)return <div className="card"><h2>Keine offenen Kontakte</h2><p className="muted">Alle aktuellen Kontakte sind bearbeitet.</p></div>;
- return <div className="session"><div className="card sessionCard"><div><span className="badge red">Kontakt 1 von {queue.length}</span><h1 className="leadName">{current.company}</h1><h2>{current.contact}</h2><p className="muted">{current.role} · {current.city} · {current.category}</p><p className="badge green">{current.status} · Versuch {current.attempts+1} von 4</p><div style={{marginTop:20}}><div className="contactLine"><Phone size={18}/><a href={`tel:${current.phone}`}>{current.phone}</a></div><div className="contactLine"><Mail size={18}/><a href={`mailto:${current.email}`}>{current.email}</a></div></div><p className="card" style={{marginTop:20}}>{current.note || 'Keine Notiz vorhanden.'}</p></div><div><a className="btn btnPrimary btnBlock largeCall" href={`tel:${current.phone}`} onClick={()=>setSession({...session,calls:session.calls+1,startedAt:session.startedAt||new Date().toISOString()})}><Phone/>Anrufen</a><div className="actionGrid" style={{marginTop:12}}><button className="btn btnGreen" onClick={()=>apply(current.area==='kunden'?'Termin':'Kontakt hergestellt')}><Check/>Erreicht</button><button className="btn btnOrange" onClick={()=>apply('Nachfassen')}><RotateCcw/>Rückruf</button><button className="btn btnDanger" onClick={()=>apply(`Nicht erreicht ${Math.min(3,current.attempts+1)}` as LeadStatus)}><X/>Nicht erreicht</button><button className="btn btnBlue" onClick={()=>apply(current.attempts>=3?'Mail 2 gesendet':'Mail 1 gesendet')}><Mail/>Mail senden</button><button className="btn" onClick={()=>apply('Termin')}><Calendar/>Termin</button><button className="btn" onClick={()=>apply('Archiv')}><Archive/>Archiv</button></div></div></div><div className="card"><h3>Session-Statistik</h3><div className="list"><div className="row"><span>Anrufe</span><strong>{session.calls}</strong></div><div className="row"><span>Erreicht</span><strong>{session.reached}</strong></div><div className="row"><span>Termine</span><strong>{session.appointments}</strong></div><div className="row"><span>Nicht erreicht</span><strong>{session.notReached}</strong></div><div className="row"><span>Quote</span><strong>{session.calls?Math.round(session.reached/session.calls*100):0}%</strong></div></div><button className="btn btnBlock" style={{marginTop:16}}><MessageSquare/>Notiz erfassen</button></div></div>}
+import { Calendar, CheckCircle, ChevronRight, Clock, Mail, Phone, SkipForward, XCircle } from 'lucide-react';
+import { Lead } from '../types';
+
+type Props = {
+  leads: Lead[];
+  setLeads: (leads: Lead[]) => void;
+  session: any;
+  setSession: (session: any) => void;
+};
+
+export function SessionPage({ leads, setLeads }: Props) {
+  const callableLeads = leads.filter((lead) => lead.status !== 'Archiviert');
+  const currentLead = callableLeads[0];
+
+  function updateLead(status: string, note?: string) {
+    if (!currentLead) return;
+
+    const updatedLead = {
+      ...currentLead,
+      status,
+      notes: note
+        ? [...(currentLead.notes || []), note]
+        : currentLead.notes,
+      updatedAt: new Date().toISOString(),
+    };
+
+    setLeads(
+      leads.map((lead) =>
+        lead.id === currentLead.id ? updatedLead : lead
+      )
+    );
+  }
+
+  function skipLead() {
+    if (!currentLead) return;
+
+    const updatedLead = {
+      ...currentLead,
+      status: 'Wiedervorlage',
+      nextAction: 'Später erneut anrufen',
+      updatedAt: new Date().toISOString(),
+    };
+
+    setLeads(
+      leads.map((lead) =>
+        lead.id === currentLead.id ? updatedLead : lead
+      )
+    );
+  }
+
+  if (!currentLead) {
+    return (
+      <div className="sessionEmpty card">
+        <CheckCircle size={48} />
+        <h2>Keine Kontakte offen</h2>
+        <p className="muted">
+          Aktuell gibt es keine Leads oder Netzwerkkontakte für die Telefon-Session.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="session3">
+      <section className="card sessionHero">
+        <div>
+          <p className="eyebrow">Telefon-Session 3.0</p>
+          <h2>Ein Kontakt nach dem anderen.</h2>
+          <p className="muted">
+            Fokusmodus für klare Akquise: anrufen, Ergebnis setzen, Notiz schreiben,
+            nächster Kontakt.
+          </p>
+        </div>
+
+        <div className="sessionProgress">
+          <strong>{callableLeads.length}</strong>
+          <span>Kontakte offen</span>
+        </div>
+      </section>
+
+      <section className="card sessionContact">
+        <div className="sessionContactHeader">
+          <div>
+            <p className="eyebrow">Aktueller Kontakt</p>
+            <h2>{currentLead.company}</h2>
+            <p className="muted">{currentLead.contact}</p>
+          </div>
+
+          <span className="badge red">
+            {currentLead.priority || 'Normal'}
+          </span>
+        </div>
+
+        <div className="sessionContactGrid">
+          <div>
+            <span>Telefon</span>
+            <strong>{currentLead.phone || 'Keine Nummer'}</strong>
+          </div>
+
+          <div>
+            <span>E-Mail</span>
+            <strong>{currentLead.email || 'Keine E-Mail'}</strong>
+          </div>
+
+          <div>
+            <span>Ort</span>
+            <strong>{currentLead.city || 'Nicht angegeben'}</strong>
+          </div>
+
+          <div>
+            <span>Status</span>
+            <strong>{currentLead.status}</strong>
+          </div>
+        </div>
+
+        <div className="sessionMainActions">
+          <a
+            className="btn btnPrimary"
+            href={currentLead.phone ? `tel:${currentLead.phone}` : undefined}
+          >
+            <Phone size={20} />
+            Jetzt anrufen
+          </a>
+
+          <button className="btn" onClick={() => updateLead('Erreicht')}>
+            <CheckCircle size={18} />
+            Erreicht
+          </button>
+
+          <button className="btn" onClick={() => updateLead('Nicht erreicht')}>
+            <XCircle size={18} />
+            Nicht erreicht
+          </button>
+
+          <button className="btn" onClick={() => updateLead('Mail gesendet')}>
+            <Mail size={18} />
+            Mail
+          </button>
+
+          <button className="btn" onClick={skipLead}>
+            <SkipForward size={18} />
+            Später
+          </button>
+        </div>
+      </section>
+
+      <section className="sessionGrid">
+        <div className="card">
+          <p className="eyebrow">Nächster Schritt</p>
+          <h3>Wiedervorlage setzen</h3>
+
+          <div className="sessionQuickDates">
+            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Heute erneut anrufen')}>
+              <Clock size={16} />
+              Heute
+            </button>
+
+            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Morgen erneut anrufen')}>
+              <Calendar size={16} />
+              Morgen
+            </button>
+
+            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Nächste Woche anrufen')}>
+              <Calendar size={16} />
+              Nächste Woche
+            </button>
+          </div>
+        </div>
+
+        <div className="card">
+          <p className="eyebrow">Qualifizierung</p>
+          <h3>Lead bewerten</h3>
+
+          <div className="sessionQuickDates">
+            <button className="btn btnPrimary" onClick={() => updateLead('Qualifiziert')}>
+              <CheckCircle size={16} />
+              Qualifiziert
+            </button>
+
+            <button className="btn" onClick={() => updateLead('Kein Interesse')}>
+              <XCircle size={16} />
+              Kein Interesse
+            </button>
+
+            <button className="btn" onClick={() => updateLead('Exportbereit')}>
+              <ChevronRight size={16} />
+              Exportbereit
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
