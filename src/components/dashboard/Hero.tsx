@@ -1,4 +1,4 @@
-import { Phone, Target, TrendingUp } from 'lucide-react';
+import { Phone, Target, TrendingUp } from "lucide-react";
 
 type HeroProps = {
   onSession: () => void;
@@ -41,14 +41,21 @@ export function Hero({ onSession }: HeroProps) {
           </div>
         </div>
 
-        <button className="btn btnPrimary awHeroMainButton" onClick={onSession}>
+        <button
+          className="btn btnPrimary awHeroMainButton"
+          onClick={onSession}
+        >
           <Phone size={20} />
           Telefon-Session starten
         </button>
       </div>
 
       <div className="awHeroWolf">
-        <img src="/wolf-png.png?v=2" alt="Akquise Wolf" />
+        <img
+          src="/wolf-png.PNG?v=3"
+          alt="Akquise Wolf"
+          draggable={false}
+        />
       </div>
     </section>
   );
