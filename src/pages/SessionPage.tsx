@@ -1,5 +1,14 @@
-import { Calendar, CheckCircle, ChevronRight, Clock, Mail, Phone, SkipForward, XCircle } from 'lucide-react';
-import { Lead } from '../types';
+import {
+  Calendar,
+  CheckCircle,
+  ChevronRight,
+  Clock,
+  Mail,
+  Phone,
+  SkipForward,
+  XCircle,
+} from 'lucide-react';
+import { Lead, LeadStatus } from '../types';
 
 type Props = {
   leads: Lead[];
@@ -9,43 +18,35 @@ type Props = {
 };
 
 export function SessionPage({ leads, setLeads }: Props) {
-  const callableLeads = leads.filter((lead) => lead.status !== 'Archiviert');
+  const callableLeads = leads.filter((lead) => lead.status !== 'Archiv');
   const currentLead = callableLeads[0];
 
-  function updateLead(status: string, note?: string) {
+  function updateLead(status: LeadStatus, noteText?: string) {
     if (!currentLead) return;
 
-    const updatedLead = {
+    const updatedLead: Lead = {
       ...currentLead,
       status,
-      notes: note
-        ? [...(currentLead.notes || []), note]
-        : currentLead.notes,
+      note: noteText ? `${currentLead.note ? `${currentLead.note}\n` : ''}${noteText}` : currentLead.note,
+      attempts: currentLead.attempts + 1,
       updatedAt: new Date().toISOString(),
     };
 
-    setLeads(
-      leads.map((lead) =>
-        lead.id === currentLead.id ? updatedLead : lead
-      )
-    );
+    setLeads(leads.map((lead) => (lead.id === currentLead.id ? updatedLead : lead)));
   }
 
   function skipLead() {
     if (!currentLead) return;
 
-    const updatedLead = {
+    const updatedLead: Lead = {
       ...currentLead,
-      status: 'Wiedervorlage',
+      status: 'Nachfassen',
       nextAction: 'Später erneut anrufen',
+      attempts: currentLead.attempts + 1,
       updatedAt: new Date().toISOString(),
     };
 
-    setLeads(
-      leads.map((lead) =>
-        lead.id === currentLead.id ? updatedLead : lead
-      )
-    );
+    setLeads(leads.map((lead) => (lead.id === currentLead.id ? updatedLead : lead)));
   }
 
   if (!currentLead) {
@@ -53,9 +54,7 @@ export function SessionPage({ leads, setLeads }: Props) {
       <div className="sessionEmpty card">
         <CheckCircle size={48} />
         <h2>Keine Kontakte offen</h2>
-        <p className="muted">
-          Aktuell gibt es keine Leads oder Netzwerkkontakte für die Telefon-Session.
-        </p>
+        <p className="muted">Aktuell gibt es keine Kontakte für die Telefon-Session.</p>
       </div>
     );
   }
@@ -66,10 +65,7 @@ export function SessionPage({ leads, setLeads }: Props) {
         <div>
           <p className="eyebrow">Telefon-Session 3.0</p>
           <h2>Ein Kontakt nach dem anderen.</h2>
-          <p className="muted">
-            Fokusmodus für klare Akquise: anrufen, Ergebnis setzen, Notiz schreiben,
-            nächster Kontakt.
-          </p>
+          <p className="muted">Anrufen, Ergebnis setzen, nächster Kontakt.</p>
         </div>
 
         <div className="sessionProgress">
@@ -86,53 +82,33 @@ export function SessionPage({ leads, setLeads }: Props) {
             <p className="muted">{currentLead.contact}</p>
           </div>
 
-          <span className="badge red">
-            {currentLead.priority || 'Normal'}
-          </span>
+          <span className="badge red">{currentLead.priority}</span>
         </div>
 
         <div className="sessionContactGrid">
-          <div>
-            <span>Telefon</span>
-            <strong>{currentLead.phone || 'Keine Nummer'}</strong>
-          </div>
-
-          <div>
-            <span>E-Mail</span>
-            <strong>{currentLead.email || 'Keine E-Mail'}</strong>
-          </div>
-
-          <div>
-            <span>Ort</span>
-            <strong>{currentLead.city || 'Nicht angegeben'}</strong>
-          </div>
-
-          <div>
-            <span>Status</span>
-            <strong>{currentLead.status}</strong>
-          </div>
+          <div><span>Telefon</span><strong>{currentLead.phone || 'Keine Nummer'}</strong></div>
+          <div><span>E-Mail</span><strong>{currentLead.email || 'Keine E-Mail'}</strong></div>
+          <div><span>Ort</span><strong>{currentLead.city || 'Nicht angegeben'}</strong></div>
+          <div><span>Status</span><strong>{currentLead.status}</strong></div>
         </div>
 
         <div className="sessionMainActions">
-          <a
-            className="btn btnPrimary"
-            href={currentLead.phone ? `tel:${currentLead.phone}` : undefined}
-          >
+          <a className="btn btnPrimary" href={currentLead.phone ? `tel:${currentLead.phone}` : undefined}>
             <Phone size={20} />
             Jetzt anrufen
           </a>
 
-          <button className="btn" onClick={() => updateLead('Erreicht')}>
+          <button className="btn" onClick={() => updateLead('Kontakt hergestellt')}>
             <CheckCircle size={18} />
             Erreicht
           </button>
 
-          <button className="btn" onClick={() => updateLead('Nicht erreicht')}>
+          <button className="btn" onClick={() => updateLead('Nicht erreicht 1')}>
             <XCircle size={18} />
             Nicht erreicht
           </button>
 
-          <button className="btn" onClick={() => updateLead('Mail gesendet')}>
+          <button className="btn" onClick={() => updateLead('Mail 1 gesendet')}>
             <Mail size={18} />
             Mail
           </button>
@@ -146,21 +122,21 @@ export function SessionPage({ leads, setLeads }: Props) {
 
       <section className="sessionGrid">
         <div className="card">
-          <p className="eyebrow">Nächster Schritt</p>
-          <h3>Wiedervorlage setzen</h3>
+          <p className="eyebrow">Wiedervorlage</p>
+          <h3>Nächster Schritt</h3>
 
           <div className="sessionQuickDates">
-            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Heute erneut anrufen')}>
+            <button className="btn" onClick={() => updateLead('Nachfassen', 'Heute erneut anrufen')}>
               <Clock size={16} />
               Heute
             </button>
 
-            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Morgen erneut anrufen')}>
+            <button className="btn" onClick={() => updateLead('Nachfassen', 'Morgen erneut anrufen')}>
               <Calendar size={16} />
               Morgen
             </button>
 
-            <button className="btn" onClick={() => updateLead('Wiedervorlage', 'Nächste Woche anrufen')}>
+            <button className="btn" onClick={() => updateLead('Nachfassen', 'Nächste Woche anrufen')}>
               <Calendar size={16} />
               Nächste Woche
             </button>
@@ -169,22 +145,22 @@ export function SessionPage({ leads, setLeads }: Props) {
 
         <div className="card">
           <p className="eyebrow">Qualifizierung</p>
-          <h3>Lead bewerten</h3>
+          <h3>Kontakt bewerten</h3>
 
           <div className="sessionQuickDates">
-            <button className="btn btnPrimary" onClick={() => updateLead('Qualifiziert')}>
+            <button className="btn btnPrimary" onClick={() => updateLead('Termin')}>
               <CheckCircle size={16} />
-              Qualifiziert
+              Termin
             </button>
 
-            <button className="btn" onClick={() => updateLead('Kein Interesse')}>
+            <button className="btn" onClick={() => updateLead('Verloren')}>
               <XCircle size={16} />
               Kein Interesse
             </button>
 
-            <button className="btn" onClick={() => updateLead('Exportbereit')}>
+            <button className="btn" onClick={() => updateLead('Gewonnen')}>
               <ChevronRight size={16} />
-              Exportbereit
+              Gewonnen
             </button>
           </div>
         </div>
