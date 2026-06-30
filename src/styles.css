@@ -1617,3 +1617,76 @@ margin-top:30px;
     grid-template-columns: 1fr;
   }
 }
+/* ==========================================
+   FIX: Topbar Telefon-Button + Ring Center
+========================================== */
+
+/* Telefon-Icon oben links vom Namen wegschieben */
+.topbar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.topbar > div:first-child .btn,
+.topbar > div:first-child .btnPrimary {
+  flex-shrink: 0;
+}
+
+.topbar > div:first-child .btnPrimary {
+  margin-left: 14px;
+}
+
+/* Falls der kleine Telefonbutton separat sitzt */
+.topbar .btnPrimary svg {
+  flex-shrink: 0;
+}
+
+/* Performance Ring exakt zentrieren */
+.awSvgRingWrap {
+  position: relative;
+  width: 230px;
+  height: 230px;
+  margin: 24px auto 14px;
+  display: grid;
+  place-items: center;
+}
+
+.awSvgRingCenter {
+  position: absolute;
+  inset: 42px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #131722, #080a0f);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.45);
+}
+
+.awSvgRingCenter strong {
+  display: block;
+  margin: 0;
+  font-size: 44px;
+  line-height: 1;
+  text-align: center;
+}
+
+.awSvgRingCenter span {
+  display: block;
+  margin: 0;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Alten CSS-Ring optisch deaktivieren, falls er noch parallel greift */
+.awPerformanceRing31 .awRing,
+.awPerformanceRing31 .awRingWrap,
+.awPerformanceRing31 .awRingInner {
+  display: none !important;
+}
