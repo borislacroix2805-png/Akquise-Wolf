@@ -8,6 +8,7 @@ import {
   SkipForward,
   XCircle,
 } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { Lead, LeadStatus } from '../types';
 
 type Props = {
@@ -17,36 +18,86 @@ type Props = {
   setSession: (session: any) => void;
 };
 
-export function SessionPage({ leads, setLeads }: Props) {
-  const callableLeads = leads.filter((lead) => lead.status !== 'Archiv');
-  const currentLead = callableLeads[0];
+export function SessionPage({ leads, setLeads, session, setSession }: Props) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [note, setNote] = useState('');
 
-  function updateLead(status: LeadStatus, noteText?: string) {
+  const callableLeads = useMemo(
+    () => leads.filter((lead) => lead.status !== 'Archiv'),
+    [leads]
+  );
+
+  const currentLead = callableLeads[currentIndex] || callableLeads[0];
+
+  function goNext() {
+    setNote('');
+
+    if (currentIndex >= callableLeads.length - 1) {
+      setCurrentIndex(0);
+      return;
+    }
+
+    setCurrentIndex(currentIndex + 1);
+  }
+
+  function updateStats(type: 'call' | 'reached' | 'notReached' | 'appointment') {
+    const nextSession = {
+      ...session,
+      calls: (session?.calls || 0) + 1,
+      reached: (session?.reached || 0) + (type === 'reached' ? 1 : 0),
+      notReached: (session?.notReached || 0) + (type === 'notReached' ? 1 : 0),
+      appointments: (session?.appointments || 0) + (type === 'appointment' ? 1 : 0),
+      startedAt: session?.startedAt || new Date().toISOString(),
+    };
+
+    setSession(nextSession);
+  }
+
+  function updateLead(
+    status: LeadStatus,
+    nextAction?: string,
+    statType: 'call' | 'reached' | 'notReached' | 'appointment' = 'call'
+  ) {
     if (!currentLead) return;
 
+    const noteEntry = note.trim();
     const updatedLead: Lead = {
       ...currentLead,
       status,
-      note: noteText ? `${currentLead.note ? `${currentLead.note}\n` : ''}${noteText}` : currentLead.note,
+      note: noteEntry
+        ? `${currentLead.note ? `${currentLead.note}\n` : ''}${new Date().toLocaleString()} - ${noteEntry}`
+        : currentLead.note,
+      nextAction: nextAction || currentLead.nextAction,
       attempts: currentLead.attempts + 1,
       updatedAt: new Date().toISOString(),
     };
 
     setLeads(leads.map((lead) => (lead.id === currentLead.id ? updatedLead : lead)));
+    updateStats(statType);
+    goNext();
   }
 
-  function skipLead() {
+  function setFollowUp(label: string, days: number) {
     if (!currentLead) return;
+
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + days);
 
     const updatedLead: Lead = {
       ...currentLead,
       status: 'Nachfassen',
-      nextAction: 'Später erneut anrufen',
+      note: note.trim()
+        ? `${currentLead.note ? `${currentLead.note}\n` : ''}${new Date().toLocaleString()} - ${note.trim()}`
+        : currentLead.note,
+      nextAction: label,
+      dueDate: dueDate.toISOString().slice(0, 10),
       attempts: currentLead.attempts + 1,
       updatedAt: new Date().toISOString(),
     };
 
     setLeads(leads.map((lead) => (lead.id === currentLead.id ? updatedLead : lead)));
+    updateStats('call');
+    goNext();
   }
 
   if (!currentLead) {
@@ -63,9 +114,11 @@ export function SessionPage({ leads, setLeads }: Props) {
     <div className="session3">
       <section className="card sessionHero">
         <div>
-          <p className="eyebrow">Telefon-Session 3.0</p>
+          <p className="eyebrow">Telefon-Session 3.1</p>
           <h2>Ein Kontakt nach dem anderen.</h2>
-          <p className="muted">Anrufen, Ergebnis setzen, nächster Kontakt.</p>
+          <p className="muted">
+            Anrufen, Ergebnis setzen, Notiz speichern und direkt zum nächsten Kontakt.
+          </p>
         </div>
 
         <div className="sessionProgress">
@@ -79,7 +132,10 @@ export function SessionPage({ leads, setLeads }: Props) {
           <div>
             <p className="eyebrow">Aktueller Kontakt</p>
             <h2>{currentLead.company}</h2>
-            <p className="muted">{currentLead.contact}</p>
+            <p className="muted">
+              {currentLead.contact}
+              {currentLead.role ? ` · ${currentLead.role}` : ''}
+            </p>
           </div>
 
           <span className="badge red">{currentLead.priority}</span>
@@ -87,10 +143,17 @@ export function SessionPage({ leads, setLeads }: Props) {
 
         <div className="sessionContactGrid">
           <div><span>Telefon</span><strong>{currentLead.phone || 'Keine Nummer'}</strong></div>
+          <div><span>Mobil</span><strong>{currentLead.mobile || 'Keine Mobilnummer'}</strong></div>
           <div><span>E-Mail</span><strong>{currentLead.email || 'Keine E-Mail'}</strong></div>
-          <div><span>Ort</span><strong>{currentLead.city || 'Nicht angegeben'}</strong></div>
           <div><span>Status</span><strong>{currentLead.status}</strong></div>
         </div>
+
+        <textarea
+          rows={4}
+          placeholder="Notiz zum Gespräch eintragen..."
+          value={note}
+          onChange={(event) => setNote(event.target.value)}
+        />
 
         <div className="sessionMainActions">
           <a className="btn btnPrimary" href={currentLead.phone ? `tel:${currentLead.phone}` : undefined}>
@@ -98,22 +161,22 @@ export function SessionPage({ leads, setLeads }: Props) {
             Jetzt anrufen
           </a>
 
-          <button className="btn" onClick={() => updateLead('Kontakt hergestellt')}>
+          <button className="btn" onClick={() => updateLead('Kontakt hergestellt', 'Kontakt hergestellt', 'reached')}>
             <CheckCircle size={18} />
             Erreicht
           </button>
 
-          <button className="btn" onClick={() => updateLead('Nicht erreicht 1')}>
+          <button className="btn" onClick={() => updateLead('Nicht erreicht 1', 'Erneut anrufen', 'notReached')}>
             <XCircle size={18} />
             Nicht erreicht
           </button>
 
-          <button className="btn" onClick={() => updateLead('Mail 1 gesendet')}>
+          <button className="btn" onClick={() => updateLead('Mail 1 gesendet', 'Mail gesendet', 'call')}>
             <Mail size={18} />
             Mail
           </button>
 
-          <button className="btn" onClick={skipLead}>
+          <button className="btn" onClick={() => setFollowUp('Später erneut anrufen', 2)}>
             <SkipForward size={18} />
             Später
           </button>
@@ -126,17 +189,17 @@ export function SessionPage({ leads, setLeads }: Props) {
           <h3>Nächster Schritt</h3>
 
           <div className="sessionQuickDates">
-            <button className="btn" onClick={() => updateLead('Nachfassen', 'Heute erneut anrufen')}>
+            <button className="btn" onClick={() => setFollowUp('Heute erneut anrufen', 0)}>
               <Clock size={16} />
               Heute
             </button>
 
-            <button className="btn" onClick={() => updateLead('Nachfassen', 'Morgen erneut anrufen')}>
+            <button className="btn" onClick={() => setFollowUp('Morgen erneut anrufen', 1)}>
               <Calendar size={16} />
               Morgen
             </button>
 
-            <button className="btn" onClick={() => updateLead('Nachfassen', 'Nächste Woche anrufen')}>
+            <button className="btn" onClick={() => setFollowUp('Nächste Woche anrufen', 7)}>
               <Calendar size={16} />
               Nächste Woche
             </button>
@@ -148,17 +211,17 @@ export function SessionPage({ leads, setLeads }: Props) {
           <h3>Kontakt bewerten</h3>
 
           <div className="sessionQuickDates">
-            <button className="btn btnPrimary" onClick={() => updateLead('Termin')}>
+            <button className="btn btnPrimary" onClick={() => updateLead('Termin', 'Termin vereinbart', 'appointment')}>
               <CheckCircle size={16} />
               Termin
             </button>
 
-            <button className="btn" onClick={() => updateLead('Verloren')}>
+            <button className="btn" onClick={() => updateLead('Verloren', 'Kein Interesse', 'call')}>
               <XCircle size={16} />
               Kein Interesse
             </button>
 
-            <button className="btn" onClick={() => updateLead('Gewonnen')}>
+            <button className="btn" onClick={() => updateLead('Gewonnen', 'Kontakt gewonnen', 'reached')}>
               <ChevronRight size={16} />
               Gewonnen
             </button>
